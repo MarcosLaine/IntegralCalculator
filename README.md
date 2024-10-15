@@ -32,7 +32,7 @@ O projeto faz uso das bibliotecas `scipy`, `sympy`, `numpy` e `matplotlib` para 
 - João Pedro Gomes Machado
 - Marcos Paulo Da Silva Laine
 - Matheus Rossi
-- Vitor Arthur
+- Vitor Artur
 
 ---
 
@@ -71,5 +71,5 @@ The project utilizes `scipy`, `sympy`, `numpy`, and `matplotlib` libraries to pe
 - João Pedro Gomes Machado
 - Marcos Paulo Da Silva Laine
 - Matheus Rossi
-- Vitor Arthur
+- Vitor Artur
 
