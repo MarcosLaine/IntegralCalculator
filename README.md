@@ -24,7 +24,7 @@ O projeto faz uso das bibliotecas `scipy`, `sympy`, `numpy` e `matplotlib` para 
 2. Certifique-se de ter o Python instalado, junto com as dependências necessárias.
 3. Execute o arquivo principal do projeto:
    ```
-   python calculadora_integral.py
+   python IntegralCalculator.py
    ```
 4. Insira a expressão da função e os limites de integração para calcular e visualizar o gráfico.
 
@@ -63,7 +63,7 @@ The project utilizes `scipy`, `sympy`, `numpy`, and `matplotlib` libraries to pe
 2. Make sure Python and the necessary dependencies are installed.
 3. Run the main project file:
    ```
-   python integral_calculator.py
+   python IntegralCalculator.py
    ```
 4. Enter the function's expression and the integration limits to calculate and visualize the graph.
 
