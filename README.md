@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-# README - Projeto Calculadora de Integral
-=======
-# Program created for a Calculus II homework
-# Author 1: João Pedro
-# Author 2: Marcos Paulo Laine
-# Author 3: Matheus Rossi
-# Author 4: Vitor Artur
->>>>>>> 085e4c6385f2b8c5c413e33b23e9af35ea647824
 
 ## Descrição
 Este projeto é uma calculadora de integrais que permite ao usuário calcular tanto a integral definida quanto a integral indefinida de uma função matemática fornecida. Utilizando uma interface gráfica desenvolvida com Tkinter, o usuário pode inserir a expressão da função e os limites de integração, e visualizar os resultados juntamente com o gráfico da função e a área sob a curva.
