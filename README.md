@@ -2,6 +2,6 @@
 # Author 1: João Pedro
 # Author 2: Marcos Paulo Laine
 # Author 3: Matheus Rossi
-# Author 4: Vitor Arthur
+# Author 4: Vitor Artur
 
 
