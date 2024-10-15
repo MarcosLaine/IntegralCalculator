@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
 import sympy as sp
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Função para calcular a integral de uma expressão fornecida pelo usuário
 def calcular_integral(expressao, a, b):
@@ -17,11 +18,15 @@ def calcular_integral(expressao, a, b):
         # Converte a função simbólica em uma função numérica para integração
         funcao_num = sp.lambdify(x, funcao_simb, 'numpy')
         
-        # Calcula a integral numérica no intervalo [a, b]
-        resultado, erro = quad(funcao_num, a, b)
-        return resultado, erro, funcao_num
+        # Calcula a integral definida numérica no intervalo [a, b]
+        resultado_definida, erro = quad(funcao_num, a, b)
+        
+        # Calcula a integral indefinida da função simbólica
+        integral_indefinida = sp.integrate(funcao_simb, x) + sp.Symbol('C')
+        
+        return resultado_definida, erro, funcao_num, funcao_simb, integral_indefinida
     except Exception as e:
-        return None, None, str(e)
+        return None, None, None, None, str(e)
 
 def plotar_grafico(funcao, a, b):
     try:
@@ -29,25 +34,27 @@ def plotar_grafico(funcao, a, b):
         x = np.linspace(-6, 6, 400)
         y = funcao(x)
         
-        plt.figure()
-        plt.plot(x, y, label='Função')
+        fig, ax = plt.subplots()
+        ax.plot(x, y, label='Função')
         
         # Verifica se os limites de integração estão dentro da faixa de -6 a 6
         if -6 <= a <= 6 and -6 <= b <= 6:
-            plt.fill_between(x, y, where=(x >= a) & (x <= b), alpha=0.3, label='Área sob a curva')
-            plt.axvline(x=a, color='red', linestyle='--', label='Limite Inferior (a)')
-            plt.axvline(x=b, color='green', linestyle='--', label='Limite Superior (b)')
+            ax.fill_between(x, y, where=(x >= a) & (x <= b), alpha=0.3, label='Área sob a curva')
+            ax.axvline(x=a, color='red', linestyle='--', label='Limite Inferior (a)')
+            ax.axvline(x=b, color='green', linestyle='--', label='Limite Superior (b)')
         
-        plt.title("Gráfico da Função e Área sob a Curva")
-        plt.xlabel("x")
-        plt.ylabel("f(x)")
-        plt.ylim([min(y) - 1, max(y) + 1])  # Ajusta dinamicamente os limites do eixo y
-        plt.xlim([-6, 6])  # Define os limites do eixo x de -6 a 6
-        plt.legend()
-        plt.grid()
-        plt.show()
+        ax.set_title("Gráfico da Função e Área sob a Curva")
+        ax.set_xlabel("x")
+        ax.set_ylabel("f(x)")
+        ax.set_ylim([min(y) - 1, max(y) + 1])  # Ajusta dinamicamente os limites do eixo y
+        ax.set_xlim([-6, 6])  # Define os limites do eixo x de -6 a 6
+        ax.legend()
+        ax.grid()
+        
+        return fig
     except Exception as e:
         print(f"Erro ao plotar o gráfico: {e}")
+        return None
 
 # Interface gráfica com Tkinter
 def calcular():
@@ -57,16 +64,29 @@ def calcular():
         b = float(entry_b.get())
         
         # Calcular a integral
-        resultado, erro, funcao = calcular_integral(expressao, a, b)
+        resultado_definida, erro, funcao, funcao_simb, integral_indefinida = calcular_integral(expressao, a, b)
         
-        if resultado is not None and funcao != str(funcao):
-            # Exibir o resultado
-            resultado_label.config(text=f"Resultado da integral: {resultado:.4f} (Erro: {erro:.4f})")
+        if resultado_definida is not None and funcao != str(funcao):
+            # Formatar a função original e as integrais de forma legível
+            funcao_formatada = sp.pretty(funcao_simb, use_unicode=True)
+            integral_indefinida_formatada = sp.pretty(integral_indefinida, use_unicode=True)
+            
+            # Exibir os resultados formatados
+            resultado_text = (
+                f"Função original: \n{funcao_formatada}\n\n"
+                f"Resultado da integral definida: {resultado_definida:.4f} (Erro: {erro:.4f})\n\n"
+                f"Integral indefinida: \n{integral_indefinida_formatada}"
+            )
+            resultado_label.config(text=resultado_text, font=('Courier', 10))
             
             # Plotar o gráfico da função
-            plotar_grafico(funcao, a, b)
+            fig = plotar_grafico(funcao, a, b)
+            if fig is not None:
+                canvas = FigureCanvasTkAgg(fig, master=root)
+                canvas.draw()
+                canvas.get_tk_widget().grid(column=0, row=5, columnspan=2)
         else:
-            resultado_label.config(text=f"Erro: {funcao}")
+            resultado_label.config(text=f"Erro: {integral_indefinida}")
     
     except ValueError:
         resultado_label.config(text="Erro: Por favor, insira valores numéricos válidos para os limites.")
@@ -89,7 +109,7 @@ entry_b.grid(column=1, row=2)
 
 ttk.Button(root, text="Calcular Integral", command=calcular).grid(column=0, row=3, columnspan=2)
 
-resultado_label = ttk.Label(root, text="Resultado: ")
+resultado_label = ttk.Label(root, text="Resultado: ", justify='left')
 resultado_label.grid(column=0, row=4, columnspan=2)
 
 root.mainloop()
