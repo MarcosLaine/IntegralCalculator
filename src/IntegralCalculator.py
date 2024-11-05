@@ -1,4 +1,3 @@
-from scipy.integrate import quad
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
@@ -6,8 +5,26 @@ import matplotlib.pyplot as plt
 import sympy as sp
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# Função para calcular a integral de uma expressão fornecida pelo usuário
-def calcular_integral(expressao, a, b):
+# Função para calcular a integral usando o Método das Somas de Riemann
+def calcular_integral_riemann(expressao, a, b, n=1000):
+    try:
+        # Define a função em termos de "x"
+        funcao = lambda x: eval(expressao)
+        
+        # Divide o intervalo [a, b] em "n" subintervalos
+        x = np.linspace(a, b, n)
+        y = funcao(x)
+        
+        # Calcula a área dos retângulos (Soma de Riemann pela esquerda)
+        h = (b - a) / n
+        area = h * np.sum(y[:-1])
+        
+        return area, None
+    except Exception as e:
+        return None, str(e)
+
+# Função para calcular a integral indefinida e formatar a função original
+def calcular_integral_indefinida(expressao):
     try:
         # Define 'x' como uma variável simbólica
         x = sp.symbols('x')
@@ -15,19 +32,14 @@ def calcular_integral(expressao, a, b):
         # Transforma a string da expressão em uma função simbólica
         funcao_simb = sp.sympify(expressao)
         
-        # Converte a função simbólica em uma função numérica para integração
-        funcao_num = sp.lambdify(x, funcao_simb, 'numpy')
-        
-        # Calcula a integral definida numérica no intervalo [a, b]
-        resultado_definida, erro = quad(funcao_num, a, b)
-        
         # Calcula a integral indefinida da função simbólica
         integral_indefinida = sp.integrate(funcao_simb, x) + sp.Symbol('C')
         
-        return resultado_definida, erro, funcao_num, funcao_simb, integral_indefinida
+        return funcao_simb, integral_indefinida
     except Exception as e:
-        return None, None, None, None, str(e)
+        return None, None
 
+# Função para plotar o gráfico da função
 def plotar_grafico(funcao, a, b):
     try:
         # Define o intervalo de -6 a 6 para o eixo x
@@ -63,21 +75,27 @@ def calcular():
         a = float(entry_a.get())
         b = float(entry_b.get())
         
-        # Calcular a integral
-        resultado_definida, erro, funcao, funcao_simb, integral_indefinida = calcular_integral(expressao, a, b)
+        # Calcular a integral usando Somas de Riemann
+        resultado_definida, erro = calcular_integral_riemann(expressao, a, b)
         
-        if resultado_definida is not None and funcao != str(funcao):
-            # Formatar a função original e as integrais de forma legível
+        # Calcular a integral indefinida e formatar a função original
+        funcao_simb, integral_indefinida = calcular_integral_indefinida(expressao)
+        
+        if resultado_definida is not None and funcao_simb is not None:
+            # Formatar a função original e a integral indefinida de forma legível
             funcao_formatada = sp.pretty(funcao_simb, use_unicode=True)
             integral_indefinida_formatada = sp.pretty(integral_indefinida, use_unicode=True)
             
             # Exibir os resultados formatados
             resultado_text = (
                 f"Função original: \n{funcao_formatada}\n\n"
-                f"Resultado da integral definida: {resultado_definida:.4f} (Erro: {erro:.4f})\n\n"
+                f"Resultado da integral definida no intervalo [{a}, {b}]: {resultado_definida:.4f}\n\n"
                 f"Integral indefinida: \n{integral_indefinida_formatada}"
             )
             resultado_label.config(text=resultado_text, font=('Courier', 10))
+            
+            # Converter a expressão em uma função numérica para plotagem
+            funcao = lambda x: eval(expressao)
             
             # Plotar o gráfico da função
             fig = plotar_grafico(funcao, a, b)
@@ -86,8 +104,7 @@ def calcular():
                 canvas.draw()
                 canvas.get_tk_widget().grid(column=0, row=5, columnspan=2)
         else:
-            resultado_label.config(text=f"Erro: {integral_indefinida}")
-    
+            resultado_label.config(text=f"Erro: {erro}")
     except ValueError:
         resultado_label.config(text="Erro: Por favor, insira valores numéricos válidos para os limites.")
 
