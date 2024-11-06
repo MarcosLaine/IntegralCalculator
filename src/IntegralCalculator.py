@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
 import sympy as sp
+from scipy.integrate import quad
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Função para calcular a integral usando o Método das Somas de Riemann
@@ -22,6 +23,25 @@ def calcular_integral_riemann(expressao, a, b, n=1000):
         return area, None
     except Exception as e:
         return None, str(e)
+
+# Função para calcular a integral usando bibliotecas prontas (scipy)
+def calcular_integral_pronta(expressao, a, b):
+    try:
+        # Define 'x' como uma variável simbólica
+        x = sp.symbols('x')
+        
+        # Transforma a string da expressão em uma função simbólica
+        funcao_simb = sp.sympify(expressao)
+        
+        # Converte a função simbólica em uma função numérica para integração
+        funcao_num = sp.lambdify(x, funcao_simb, 'numpy')
+        
+        # Calcula a integral definida numérica no intervalo [a, b]
+        resultado_definida, erro = quad(funcao_num, a, b)
+        
+        return resultado_definida, erro
+    except Exception as e:
+        return None, None
 
 # Função para calcular a integral indefinida e formatar a função original
 def calcular_integral_indefinida(expressao):
@@ -76,12 +96,18 @@ def calcular():
         b = float(entry_b.get())
         
         # Calcular a integral usando Somas de Riemann
-        resultado_definida, erro = calcular_integral_riemann(expressao, a, b)
+        resultado_riemann, erro_riemann = calcular_integral_riemann(expressao, a, b)
+        
+        # Calcular a integral usando bibliotecas prontas (scipy)
+        resultado_pronta, erro_pronta = calcular_integral_pronta(expressao, a, b)
         
         # Calcular a integral indefinida e formatar a função original
         funcao_simb, integral_indefinida = calcular_integral_indefinida(expressao)
         
-        if resultado_definida is not None and funcao_simb is not None:
+        if resultado_riemann is not None and resultado_pronta is not None and funcao_simb is not None:
+            # Calcular o erro entre o método das Somas de Riemann e a integral pronta
+            erro = abs(resultado_pronta - resultado_riemann)
+            
             # Formatar a função original e a integral indefinida de forma legível
             funcao_formatada = sp.pretty(funcao_simb, use_unicode=True)
             integral_indefinida_formatada = sp.pretty(integral_indefinida, use_unicode=True)
@@ -89,7 +115,9 @@ def calcular():
             # Exibir os resultados formatados
             resultado_text = (
                 f"Função original: \n{funcao_formatada}\n\n"
-                f"Resultado da integral definida no intervalo [{a}, {b}]: {resultado_definida:.4f}\n\n"
+                f"Resultado da integral definida utilizando Somas de Riemann no intervalo [{a}, {b}]: {resultado_riemann:.7f}\n"
+                f"Resultado da integral definida utilizando a biblioteca Sympy no intervalo [{a}, {b}]: {resultado_pronta:.7f}\n"
+                f"Erro da integral por somas de Riemann (diferença entre os métodos): {erro:.7f}\n\n"
                 f"Integral indefinida: \n{integral_indefinida_formatada}"
             )
             resultado_label.config(text=resultado_text, font=('Courier', 10))
@@ -104,7 +132,7 @@ def calcular():
                 canvas.draw()
                 canvas.get_tk_widget().grid(column=0, row=5, columnspan=2)
         else:
-            resultado_label.config(text=f"Erro: {erro}")
+            resultado_label.config(text=f"Erro: {erro_riemann if resultado_riemann is None else erro_pronta}")
     except ValueError:
         resultado_label.config(text="Erro: Por favor, insira valores numéricos válidos para os limites.")
 
