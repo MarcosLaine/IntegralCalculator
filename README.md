@@ -1,4 +1,4 @@
-# README - Calculadora de Integrais e Área entre Funções
+# Calculadora de Integrais e Área entre Funções
 
 ## Descrição
 Este projeto é uma calculadora de integrais que permite ao usuário calcular tanto integrais definidas quanto indefinidas de funções matemáticas. Além disso, a ferramenta permite o cálculo da área entre duas funções em um intervalo especificado pelo usuário. Utilizando uma interface gráfica desenvolvida com Tkinter, o usuário pode inserir expressões matemáticas e limites de integração, visualizando os resultados e o gráfico das funções e suas áreas.
@@ -114,7 +114,7 @@ Este projeto foi desenvolvido como parte de uma atividade de programação com f
 Sinta-se à vontade para contribuir com melhorias, sugere alteracões ou relatar problemas encontrados ao utilizar o projeto!
 
 
-# README - Integral Calculator and Area Between Functions
+# Integral Calculator and Area Between Functions
 
 ## Description
 This project is an integral calculator that allows users to calculate both definite and indefinite integrals of mathematical functions. Additionally, the tool allows the calculation of the area between two functions in a user-specified interval. Using a graphical interface developed with Tkinter, users can input mathematical expressions and integration limits, and visualize the results and the graph of the functions and their areas.
