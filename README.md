@@ -34,7 +34,7 @@ Recomenda-se rodar o projeto em um ambiente virtual para garantir que todas as d
 
 2. **Crie um ambiente virtual**. No diretório do projeto, execute:
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    ```
 
 3. **Ative o ambiente virtual**:
@@ -47,14 +47,14 @@ Recomenda-se rodar o projeto em um ambiente virtual para garantir que todas as d
      source venv/bin/activate
      ```
 
-4. **Instale as dependências necessárias** utilizando o arquivo `requirements.txt`. Caso ele não esteja presente, instale as bibliotecas manualmente:
+4. **Instale as dependências necessárias**:
    ```bash
    pip install re numpy matplotlib tkinter
    ```
 
 5. **Execute o arquivo principal do projeto**:
    ```bash
-   python IntegralCalculator.py
+   python3 IntegralCalculator.py
    ```
 
 ### Rodando o Projeto Sem Ambiente Virtual
@@ -64,7 +64,7 @@ pip install re numpy matplotlib tkinter
 ```
 Após a instalação das dependências, execute o projeto com:
 ```bash
-python IntegralCalculator.py
+python3 IntegralCalculator.py
 ```
 
 ## Como Utilizar
@@ -150,7 +150,7 @@ It is recommended to run the project in a virtual environment to ensure that all
 
 2. **Create a virtual environment**. In the project directory, run:
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    ```
 
 3. **Activate the virtual environment**:
@@ -163,14 +163,14 @@ It is recommended to run the project in a virtual environment to ensure that all
      source venv/bin/activate
      ```
 
-4. **Install the necessary dependencies** using the `requirements.txt` file. If it is not present, install the libraries manually:
+4. **Install the necessary dependencies**:
    ```bash
    pip install re numpy matplotlib tkinter
    ```
 
 5. **Run the main project file**:
    ```bash
-   python IntegralCalculator.py
+   python3 IntegralCalculator.py
    ```
 
 ### Running the Project Without a Virtual Environment
@@ -180,7 +180,7 @@ pip install re numpy matplotlib tkinter
 ```
 After installing the dependencies, run the project with:
 ```bash
-python IntegralCalculator.py
+python3 IntegralCalculator.py
 ```
 
 ## How to Use
